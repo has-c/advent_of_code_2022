@@ -11,6 +11,8 @@ item_priorities = pd.DataFrame({'alphabet':lowercase_alphabet, 'priority':range(
 filename = r"D:\Projects\advent_of_code_2022\Day 3\day_3_puzzle_input.txt"
 raw_packing_data = pd.read_csv(filename, sep=" ", names=['rucksacks'])
 
+## PART 1
+
 # Whats common between the two rucksacks
 rucksack_data = raw_packing_data.copy()
 # Split into compartments 
