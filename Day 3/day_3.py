@@ -21,7 +21,6 @@ rucksack_data["comp_2"] = rucksack_data['rucksacks'].apply(lambda x: x[len(x)//2
 
 # Whats the same in each compartment 
 rucksack_data["common"] = rucksack_data.apply(lambda x: list(set(x["comp_1"]).intersection(set(x["comp_2"])))[0],axis=1)
-rucksack_data["common"] = rucksack_data["common"]
 rucksack_data = pd.merge(
     rucksack_data,
     item_priorities,
@@ -31,4 +30,32 @@ rucksack_data = pd.merge(
 )
 print("Total Priority Score ", rucksack_data["priority"].sum())
 
+## PART 2
+
+# Create elf groups
+rucksack_data = raw_packing_data.copy()
+member_1_idx = pd.RangeIndex(0,rucksack_data["rucksacks"].shape[0], step=3)
+member_2_idx = pd.RangeIndex(1,rucksack_data["rucksacks"].shape[0], step=3)
+member_3_idx = pd.RangeIndex(2,rucksack_data["rucksacks"].shape[0], step=3)
+groups = pd.DataFrame({
+    'member_1': list(raw_packing_data.loc[member_1_idx, "rucksacks"]),
+    'member_2': list(raw_packing_data.loc[member_2_idx, "rucksacks"]),
+    'member_3': list(raw_packing_data.loc[member_3_idx, "rucksacks"])
+})
+
+# Get common item badge per group
+groups["common"] = groups.apply(
+    lambda x: list(
+        set(x["member_1"]).intersection(set(x["member_2"])).intersection(set(x["member_3"]))
+        )[0]
+    ,axis=1)
+# Get priority scores
+groups = pd.merge(
+    groups,
+    item_priorities,
+    how='left',
+    left_on="common",
+    right_on="alphabet"
+)
+print("Total Priority Score ", groups["priority"].sum())
 
